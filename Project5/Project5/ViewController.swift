@@ -48,7 +48,7 @@ class ViewController: UITableViewController {
         askingAlertController.addTextField()
         
         let submitAction = UIAlertAction(title: "submit", style: .default) {
-            [weak self, weak askingAlertController] action in
+            [weak self, weak askingAlertController] action in //weak self
             guard let answer = askingAlertController?.textFields?[0].text else { return }
             self?.submit(answer)
         }
