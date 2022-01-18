@@ -56,11 +56,14 @@ class ViewController: UITableViewController {
         present(askingAlertController, animated: true)
     }
     
+    func showError(title: String, errorMessage: String) {
+        let ac = UIAlertController(title: title, message: errorMessage, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
+    }
+    
     func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
-        
-        let errorTitle: String
-        let errorMessage: String
         
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
@@ -72,21 +75,16 @@ class ViewController: UITableViewController {
                     
                     return
                 } else {
-                    errorTitle = "Word not recognized"
-                    errorMessage = "You can`t just make them up, you now!"
+                    showError(title: "Word not recognized", errorMessage: "You can`t just make them up, you now!")
                 }
             } else {
-                errorTitle = "Word already used"
-                errorMessage = "Be more original!"
+                showError(title: "Word already used", errorMessage: "Be more original!")
+                
             }
         } else {
             guard let title = title else { return }
-            errorTitle = "Word not possible!"
-            errorMessage = "You can `t spell that word from \(title.lowercased())"
+            showError(title: "Word not possible!", errorMessage: "You can `t spell that word from \(title.lowercased())")
         }
-        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
     }
     
     func isPossible(word: String) -> Bool {
