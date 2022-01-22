@@ -15,6 +15,7 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refreshPage))
         
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startWords = try? String(contentsOf: startWordsURL) {
@@ -54,6 +55,10 @@ class ViewController: UITableViewController {
         }
         askingAlertController.addAction(submitAction)
         present(askingAlertController, animated: true)
+    }
+    
+    @objc func refreshPage() {
+        startGame()
     }
     
     func showError(title: String, errorMessage: String) {
@@ -105,10 +110,17 @@ class ViewController: UITableViewController {
     }
     
     func isReal(word: String) -> Bool {
-        let checker = UITextChecker()
-        let range = NSRange(location: 0, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
-        return misspelledRange.location == NSNotFound
+        if word.count <= 3 {
+            let checker = UITextChecker()
+            let range = NSRange(location: 0, length: word.utf16.count)
+            let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
+            if allWords == usedWords {
+                return false
+            }
+            return misspelledRange.location == NSNotFound
+        }
+        return false
+        
     }
 }
 
